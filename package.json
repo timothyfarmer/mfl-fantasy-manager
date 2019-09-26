@@ -1,8 +1,9 @@
 {
-  "name": "fantasyfootballapp",
+  "name": "mfl-fantasy-api",
   "version": "1.0.0",
   "description": "Node.js wrapper for MyFantasyLeague.com",
   "main": "MFL.js",
+  "repository": "github:timothyfarmer/mfl-fantasy-api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
