@@ -1,24 +1,24 @@
 const db = require('../database/db');
 
 module.exports = db.sequelize.define('players', {
-  PlayerID: {
+  id: {
     type: db.Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
     len: 50
   },
-  PlayerName: {
+  name: {
     type: db.Sequelize.STRING,
     allowNull: false,
     len: 500
   },
-  PlayerPosition: {
+  position: {
     type: db.Sequelize.STRING,
     allowNull: false,
     len: 10
   },
-  PlayerTeam: {
+  team: {
     type: db.Sequelize.STRING,
     allowNull: true,
     len: 10
@@ -26,5 +26,4 @@ module.exports = db.sequelize.define('players', {
 }, {
   timestamps: false,
   dialect: 'mssql',
-  force: true
 });
