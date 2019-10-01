@@ -103,7 +103,7 @@ this.setCookie = MFL.prototype.setCookie = ( cookie ) => {
 };
 
 this.getCookie = MFL.prototype.getCookie = () => {
-  return 'bR1u1smRvuKmx1qmO1DEYjMeFKctiQ=='
+  return this.cookie
     .replace(/=/gi, '%3D')
     .replace(/\+/gi, '%26')
     .replace(/\//gi, '%2F');
@@ -118,7 +118,7 @@ this.getPlayerID = MFL.prototype.getPlayerID = () => {
 };
 
 
-MFL.prototype.request = async( reqType ) => {
+MFL.prototype.request = ( reqType ) => {
   let parameters = '';
   if( ! this.cookie ) {
     console.error( "Cannot process request: Not logged in. Make sure to call login before making requests" );
@@ -165,7 +165,7 @@ MFL.prototype.login = async() => {
     }
     console.log( "Logged in with cookie", cookie );
     this.setCookie( cookie );
-    return true;
+    return cookie;
   } ).catch( e => {
     console.error( e );
     return false;

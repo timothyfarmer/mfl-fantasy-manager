@@ -29,18 +29,18 @@ describe( 'Can login to MFL', function() {
       console.error( e );
       return false;
     } );
-    expect( cookie ).to.be.true;
+    expect( cookie ).to.not.eq(false);
   } );
 
 } );
 
 describe( 'Can get/set api object fields', function() {
-  it( 'should be able to get/set the cookie on api wrapper object', function() {
+  it( 'should be able to get/set the cookie on api wrapper object', async function() {
     let api = new MFL();
-    let cookie = api.login();
+    let cookie = await api.login();
     api.setCookie( cookie );
     let cookieTmp = api.getCookie();
-    expect( cookie ).to.eq( cookieTmp ).not.eq(null);
+    expect(api.getCookie()).to.eq( cookieTmp ).not.eq( null );
   } );
   it( 'should be able to get/set the leagueID on api wrapper object', function() {
     let myLeagueID = 39531;
@@ -73,25 +73,25 @@ describe( 'Request Types with required parameters', function() {
 
   it( 'should throw error when user logged in and week is required and not supplied', async function() {
     await api.login();
-    api.setWeek(null);
-    expect( () => api.request( 'franchiseScoreAdjustment' ) ).to.throws();
+    api.setWeek( null );
+    expect( () => api.request( 'franchiseScoreAdjustment' ) ).to.throws(Error);
   } );
 
-  it('should not throw error when user logged in and week is supplied', async function() {
+  it( 'should not throw error when user logged in and week is supplied', async function() {
     await api.login();
-    api.setWeek(1);
-    expect(() => api.request('franchiseScoreAdjustment')).to.not.throws();
-  });
+    api.setWeek( 1 );
+    expect( () => api.request( 'franchiseScoreAdjustment' ) ).to.not.throws();
+  } );
 
-  it('should throw an error when user logged in and player id is required and not supplied', async function(){
+  it( 'should throw an error when user logged in and player id is required and not supplied', async function() {
     await api.login();
-    expect( () => api.request( 'playerProfile' ) ).to.throws();
-  });
+    expect( () => api.request( 'playerProfile' ) ).to.throws(Error);
+  } );
 
-  it('should not throw error when user logged in and player id is required and is supplied', async function() {
+  it( 'should not throw error when user logged in and player id is required and is supplied', async function() {
     await api.login();
-    api.setPlayerID(10);
-    expect(() => api.request('playerProfile')).to.not.throws();
-  });
+    api.setPlayerID( 10 );
+    expect( () => api.request( 'playerProfile' ) ).to.not.throws();
+  } );
 
 } );
