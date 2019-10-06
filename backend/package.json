@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for MFL API",
+  "main": "cli/index.js",
+  "author": "Tim Farmer",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+
+    "sequelize": "^5.19.0",
+    "tedious": "^6.4.0",
+
+    "yargs": "^14.0.0"
+  }
+}

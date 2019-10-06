@@ -1,5 +1,7 @@
 const axios = require( 'axios' );
 const _ = require( 'underscore' );
+const util = require( "util" );
+const url = require('url');
 require( 'dotenv' ).config();
 
 const requireLeagueID = [
@@ -79,8 +81,7 @@ const settings = {
   year: process.env.YEAR
 };
 
-let MFL = function() {
-};
+let MFL = function() {};
 
 this.setLeagueID = MFL.prototype.setLeagueID = ( leagueID ) => {
   this.leagueID = leagueID;
@@ -103,10 +104,7 @@ this.setCookie = MFL.prototype.setCookie = ( cookie ) => {
 };
 
 this.getCookie = MFL.prototype.getCookie = () => {
-  return this.cookie
-    .replace(/=/gi, '%3D')
-    .replace(/\+/gi, '%26')
-    .replace(/\//gi, '%2F');
+  return encodeURIComponent(this.cookie);
 };
 
 this.setPlayerID = MFL.prototype.setPlayerID = ( playerID ) => {
@@ -117,36 +115,56 @@ this.getPlayerID = MFL.prototype.getPlayerID = () => {
   return this.playerID;
 };
 
+this.setReqType = MFL.prototype.setReqType = (reqType) => {
+  this.reqType = reqType;
+};
+this.getReqType = MFL.prototype.getReqType = () => {
+  return this.reqType;
+};
 
-MFL.prototype.request = ( reqType ) => {
+this.setMessage = MFL.prototype.setMessage = (message) => {
+  this.message = encodeURIComponent(message);
+  console.log("THIS MESSAGE SET TO", this.message);
+};
+
+this.getMessage = MFL.prototype.getMessage = () => {
+  return this.message;
+};
+
+
+MFL.prototype.request = ( apiMethod ) => {
+  if(!this.reqType) {
+    this.setReqType('export'); // if no request type, assume export
+  }
   let parameters = '';
   if( ! this.cookie ) {
     console.error( "Cannot process request: Not logged in. Make sure to call login before making requests" );
     return;
   }
-  if( _.contains( requireLeagueID, reqType ) && ! this.getLeagueID() ) {
-    throw new Error( 'League ID is required for request type ' + reqType );
-  } else if( _.contains( requireLeagueID, reqType ) ) {
+  if( _.contains( requireLeagueID, apiMethod ) && ! this.getLeagueID() ) {
+    throw new Error( 'League ID is required for request type ' + apiMethod );
+  } else if( _.contains( requireLeagueID, apiMethod ) ) {
     parameters += '&L=' + this.getLeagueID();
   }
-  if( _.contains( requireWeek, reqType ) && ! this.getWeek() ) {
-    throw new Error( 'Week is required for request type ' + reqType );
-  } else if( _.contains( requireWeek, reqType ) ) {
+  if( _.contains( requireWeek, apiMethod ) && ! this.getWeek() ) {
+    throw new Error( 'Week is required for request type ' + apiMethod );
+  } else if( _.contains( requireWeek, apiMethod ) ) {
     parameters += '&W=' + this.getWeek();
   }
-  if( _.contains( requirePlayerID, reqType ) && ! this.getPlayerID() ) {
-    throw new Error( 'Player ID is required for request type ' + reqType );
-  } else if( _.contains( requirePlayerID, reqType ) ) {
+  if( _.contains( requirePlayerID, apiMethod ) && ! this.getPlayerID() ) {
+    throw new Error( 'Player ID is required for request type ' + apiMethod );
+  } else if( _.contains( requirePlayerID, apiMethod ) ) {
     parameters += '&P=' + this.getPlayerID();
   }
 
-  let url = process.env.MFL_BASEURL + '/' + settings.year + '/export?&TYPE=' + reqType + parameters + '&JSON=1';
+  let url = process.env.MFL_BASEURL + '/' + settings.year + '/' + this.getReqType() + '?&TYPE=' + apiMethod + parameters + '&MESSAGE=' + this.message + '&JSON=1';
   console.log( "REQUESTING", url );
   return axios.get( url, {headers:{
-    Cookie: this.getCookie()
+    Cookie: "MFL_USER_ID="+this.getCookie()
     }} ).then( response => {
-    console.log( response );
-  }, );
+    console.log( util.inspect(response.data,true,null,true) );
+    return response.data;
+  }, ).catch(e => console.error(e));
 };
 
 

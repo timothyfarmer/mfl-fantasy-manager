@@ -1,7 +1,7 @@
 let expect = require( 'chai' ).expect;
 let describe = require( 'mocha' ).describe;
 let db = require( '../database/db' );
-let MFL = require( '../src/MFL' );
+let MFL = require( '../cli/MFL' );
 
 describe( 'Can access database', function() {
   it( 'should establish sequelize connection', async function() {
@@ -54,6 +54,20 @@ describe( 'Can get/set api object fields', function() {
     api.setWeek( week );
     expect( api.getWeek() ).to.eq( week );
   } );
+  it('should be able to get/set the reqType on api wrapper object', function() {
+    let reqType = 'export';
+    let api = new MFL();
+    api.setReqType(reqType);
+    expect(api.getReqType()).to.eq(reqType);
+  });
+  it('should be able to get/set the message on api wrapper object', function() {
+    let message = 'I\'m coming for you Jason!';
+    let api = new MFL();
+    api.setMessage(message);
+    message = encodeURIComponent(message);
+    console.log("MESSAGE:", message);
+    expect(api.getMessage()).to.eq(message);
+  })
 } );
 
 
@@ -93,5 +107,19 @@ describe( 'Request Types with required parameters', function() {
     api.setPlayerID( 10 );
     expect( () => api.request( 'playerProfile' ) ).to.not.throws();
   } );
-
 } );
+
+describe('Can get player list', function() {
+
+
+  it('should be able to get the list of players', async function() {
+    let api = new MFL();
+    let data = null;
+    await api.login();
+
+    await api.request('players').then(res => {
+      data = res;
+    });
+    expect(data).has.keys(['encoding', 'players', 'version']);
+  })
+});

@@ -1,0 +1,14 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "My Fantasy League Manager UI",
+  "main": "index.js",
+  "author": "Tim Farmer",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "react-router-dom": "^5.1.2",
+    "apollo-datasource-rest": "^0.6.4",
+    "apollo-server-express": "^2.9.5"
+  }
+}
