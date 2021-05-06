@@ -20,7 +20,7 @@
     "dotenv": "^8.1.0",
     "sequelize": "^5.19.0",
     "tedious": "^6.4.0",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "yargs": "^14.0.0"
   },
   "devDependencies": {
